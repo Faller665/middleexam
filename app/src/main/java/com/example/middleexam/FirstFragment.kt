@@ -19,13 +19,13 @@ class FirstFragment(): Fragment(){
         val author=mView.findViewById<TextView>(R.id.tv_author)
         val introduce=mView.findViewById<TextView>(R.id.tv_introduce)
         val myviewmodel by lazy{
-            ViewModelProvider(this)[MainViewModel::class.java]
+            ViewModelProvider(this)[ViewModel::class.java]
         }
         val bundle = arguments
           val email = bundle!!.getInt("data")
         myviewmodel.apply {
-            getData()
-            gettopStoryLifeData().observe(viewLifecycleOwner){
+            getDataInFragment()
+            get_topStoryLifeData().observe(viewLifecycleOwner){
                 Glide.with(requireContext()).load(it[email].image).into(back)
                 author.text=it[email].hint
                 introduce.text=it[email].title

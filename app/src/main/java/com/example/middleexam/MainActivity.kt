@@ -1,20 +1,17 @@
 package com.example.middleexam
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.middleexam.Tool.BaseActivity
 import com.example.middleexam.databinding.ActivityMainBinding
 
 class MainActivity :BaseActivity() {
     private val mybinding:ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     val myviewmodel by lazy{
-        ViewModelProvider(this)[MainViewModel::class.java]
+        ViewModelProvider(this)[ViewModel::class.java]
     }
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +20,17 @@ class MainActivity :BaseActivity() {
         val window=window
         transparentStatusBar(window)
         setSupportActionBar(mybinding.toolbar)
+
+        myviewmodel.apply {
+            getDataInMain()
+            get_StoryLIfeData().observe(this@MainActivity){
+                mybinding.rv.apply {
+                    adapter=MainRvAdapter(it,this@MainActivity)
+                    layoutManager=LinearLayoutManager(this@MainActivity)
+                }
+            }
+        }
+
         var fragments= ArrayList<BackFragment>()
         for (i in 0..4){
            val itemfragment:FirstFragment= FirstFragment()
@@ -35,7 +43,8 @@ class MainActivity :BaseActivity() {
                 }
             })
         }
-        val adapter:FragmentAdapter= FragmentAdapter(this,fragments)
-        mybinding.vp2.adapter=adapter
+        val fragmentadapter:FragmentAdapter= FragmentAdapter(this,fragments)
+        mybinding.vp2.adapter=fragmentadapter
+
     }
 }
