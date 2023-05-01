@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,17 +23,19 @@ class MainActivity :BaseActivity() {
         val window=window
         transparentStatusBar(window)
         setSupportActionBar(mybinding.toolbar)
-        myviewmodel.apply {
-            getData()
-//            getDateLifeData().observe(this@MainActivity){
-//                mybinding.tvDate.text=it
-//            }
-            gettopStoryLifeData().observe(this@MainActivity){
-             with(mybinding.rvBanner){
-                 adapter=BannerRvAdapter(it,this@MainActivity)
-                 layoutManager= LinearLayoutManager(this@MainActivity, RecyclerView.HORIZONTAL, false)
-             }
-            }
+        var fragments= ArrayList<BackFragment>()
+        for (i in 0..4){
+           val itemfragment:FirstFragment= FirstFragment()
+           val bundle: Bundle=  Bundle()
+            bundle.putInt("data",i)
+            itemfragment.arguments = bundle
+            fragments.add(object : BackFragment {
+                override fun back(): Fragment {
+                    return itemfragment
+                }
+            })
         }
+        val adapter:FragmentAdapter= FragmentAdapter(this,fragments)
+        mybinding.vp2.adapter=adapter
     }
 }
