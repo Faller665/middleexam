@@ -33,7 +33,7 @@ class ViewModel :ViewModel(){
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val testService=retrofit.create(FirstService::class.java)
-        testService.getInternetData().enqueue(object :Callback<FirstData>{
+        testService.getInternetData1().enqueue(object :Callback<FirstData>{
             override fun onResponse(call: Call<FirstData>, response: Response<FirstData>) {
                 val data=response.body()
                 if (data!=null){
@@ -45,13 +45,13 @@ class ViewModel :ViewModel(){
         }
         )
     }
-    fun getDataInMain(){
+    fun getDataInMain1(){
         val retrofit=Retrofit.Builder()
             .baseUrl("https://news-at.zhihu.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val testService=retrofit.create(FirstService::class.java)
-        testService.getInternetData().enqueue(object :Callback<FirstData>{
+        testService.getInternetData1().enqueue(object :Callback<FirstData>{
             override fun onResponse(call: Call<FirstData>, response: Response<FirstData>) {
                 val data=response.body()
                 if (data!=null){
@@ -59,11 +59,26 @@ class ViewModel :ViewModel(){
                 }
             }
             override fun onFailure(call: Call<FirstData>, t: Throwable) {
-
             }
-
         }
         )
     }
-
+    fun getDataInMain2(temp:Int){
+        val retrofit=Retrofit.Builder()
+            .baseUrl("https://news-at.zhihu.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val testService=retrofit.create(FirstService::class.java)
+        testService.getInternetData2(temp).enqueue(object :Callback<FirstData>{
+            override fun onResponse(call: Call<FirstData>, response: Response<FirstData>) {
+                val data=response.body()
+                if (data!=null){
+                    storyLIfeData.postValue(data.stories)
+                }
+            }
+            override fun onFailure(call: Call<FirstData>, t: Throwable) {
+            }
+        }
+        )
+    }
 }

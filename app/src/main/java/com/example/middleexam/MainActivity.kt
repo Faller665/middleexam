@@ -2,18 +2,16 @@ package com.example.middleexam
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
-import android.view.View.OnTouchListener
-import android.view.ViewConfiguration
 import android.widget.Toast
-import androidx.core.view.ViewConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.middleexam.Tool.BaseActivity
+import com.example.middleexam.data.Story
 import com.example.middleexam.databinding.ActivityMainBinding
-import kotlin.math.abs
+
 
 class MainActivity :BaseActivity() {
     private val mybinding:ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -21,6 +19,8 @@ class MainActivity :BaseActivity() {
         ViewModelProvider(this)[ViewModel::class.java]
     }
    private lateinit var fragmentadapter:FragmentAdapter
+   private var temp=mutableListOf<Story>()
+    private var m:Int=20220429
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,22 +30,38 @@ class MainActivity :BaseActivity() {
         setSupportActionBar(mybinding.toolbar)
 
         myviewmodel.apply {
-            getDataInMain()
-            get_StoryLIfeData().observe(this@MainActivity){
+            getDataInMain1()
+            get_StoryLIfeData().observe(this@MainActivity) {
+                var temp1=it.plus(temp)
+                temp=it as  MutableList<Story>
                 mybinding.rv.apply {
-                    adapter=MainRvAdapter(it,this@MainActivity)
-                    layoutManager=LinearLayoutManager(this@MainActivity)
-                }
+                    adapter = MainRvAdapter(temp1, this@MainActivity, true)
+                    layoutManager = LinearLayoutManager(this@MainActivity)
+                    addOnScrollListener(object :RecyclerView.OnScrollListener(){
+                        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                            var lastPosition = -1
+                            if(newState == RecyclerView.SCROLL_STATE_IDLE){
+                                lastPosition = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                            }
+                            if(lastPosition == (layoutManager as LinearLayoutManager).itemCount -1){
+                                m-=1
+                                Toast.makeText(this@MainActivity, "正在加载", Toast.LENGTH_SHORT).show()
+                                myviewmodel.getDataInMain2(m)
+                            }
+                        }})
+            }
+        }}
+
+
+        mybinding.swipe.setOnRefreshListener {
+            myviewmodel.getDataInMain1()
+            if (mybinding.swipe.isRefreshing){
+                mybinding.swipe.isRefreshing=false
+                Toast.makeText(this, "刷新成功", Toast.LENGTH_SHORT).show()
             }
         }
 
-        mybinding.swipe.setOnRefreshListener {
-            myviewmodel.getDataInMain()
-            if (mybinding.swipe.isRefreshing){
-                mybinding.swipe.isRefreshing=false
-                Toast.makeText(this, "数据刷新完成", Toast.LENGTH_SHORT).show()
-            }
-        }
+
         var fragments= ArrayList<BackFragment>()
         for (i in 0..4){
            val itemfragment:FirstFragment= FirstFragment()
@@ -97,5 +113,5 @@ class MainActivity :BaseActivity() {
 //
 //            })
         }
-    }
-}
+
+}}
