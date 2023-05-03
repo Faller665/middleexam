@@ -2,9 +2,7 @@ package com.example.middleexam
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.middleexam.data.FirstData
-import com.example.middleexam.data.Story
-import com.example.middleexam.data.TopStory
+import com.example.middleexam.data.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,10 +18,17 @@ class ViewModel :ViewModel(){
     private val storyLIfeData by lazy {
         MutableLiveData<List<Story>>()
     }
+
+    private val assessLIfeData by lazy {
+        MutableLiveData<List<Comment>>()
+    }
     fun get_topStoryLifeData(): MutableLiveData<List<TopStory>>{
         return topStoryLifeData
     }
 
+    fun get_assessLIfeData():MutableLiveData<List<Comment>>{
+        return assessLIfeData
+    }
     fun get_StoryLIfeData():MutableLiveData<List<Story>>{
         return storyLIfeData
     }
@@ -77,6 +82,24 @@ class ViewModel :ViewModel(){
                 }
             }
             override fun onFailure(call: Call<FirstData>, t: Throwable) {
+            }
+        }
+        )
+    }
+    fun getDataInAssess(temp:Int?){
+        val retrofit=Retrofit.Builder()
+            .baseUrl( "http://news-at.zhihu.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val testService=retrofit.create(FirstService::class.java)
+        testService.getLongAssessData(temp).enqueue(object :Callback<AssessData>{
+            override fun onResponse(call: Call<AssessData>, response: Response<AssessData>) {
+                val data=response.body()
+                if (data != null) {
+                    assessLIfeData.postValue(data.comments)
+                }
+            }
+            override fun onFailure(call: Call<AssessData>, t: Throwable) {
             }
         }
         )

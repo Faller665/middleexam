@@ -24,6 +24,8 @@
             <TextView
                 android:id="@+id/tv_date"
                 android:layout_width="50dp"
+                android:textStyle="bold"
+                android:gravity="center"
                 android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -49,7 +51,7 @@
                 android:id="@+id/iv_head"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@color/black"
+                android:src="@drawable/ic_user"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"

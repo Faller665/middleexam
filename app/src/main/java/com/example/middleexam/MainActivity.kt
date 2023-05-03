@@ -1,7 +1,10 @@
 package com.example.middleexam
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.icu.util.Calendar
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +31,11 @@ class MainActivity :BaseActivity() {
         val window=window
         transparentStatusBar(window)
         setSupportActionBar(mybinding.toolbar)
+//        设置日期
+        val calender=Calendar.getInstance()
+        val mouth=calender.get(Calendar.MONTH)+1
+        val day=calender.get(Calendar.DAY_OF_MONTH)
+        mybinding.tvDate.text="${mouth}月${day}日"
 
         myviewmodel.apply {
             getDataInMain1()
@@ -35,7 +43,16 @@ class MainActivity :BaseActivity() {
                 var temp1=it.plus(temp)
                 temp=it as  MutableList<Story>
                 mybinding.rv.apply {
-                    adapter = MainRvAdapter(temp1, this@MainActivity, true)
+                   val madapter = MainRvAdapter(temp1, this@MainActivity, true)
+                    madapter.setOnclick(object :MainRvAdapter.ClickInterface{
+                        override fun onTitleClick(view: View, position: Int) {
+                            val intent= Intent(this@MainActivity,Web::class.java)
+                            intent.putExtra("url",temp1[position].url)
+                            intent.putExtra("id",temp1[position].id)
+                            startActivity(intent)
+                        }
+                    })
+                    adapter=madapter
                     layoutManager = LinearLayoutManager(this@MainActivity)
                     addOnScrollListener(object :RecyclerView.OnScrollListener(){
                         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -51,8 +68,6 @@ class MainActivity :BaseActivity() {
                         }})
             }
         }}
-
-
         mybinding.swipe.setOnRefreshListener {
             myviewmodel.getDataInMain1()
             if (mybinding.swipe.isRefreshing){
