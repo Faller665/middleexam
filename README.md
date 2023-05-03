@@ -17,7 +17,7 @@
 3.新闻详情的具体展示是用webview实现
 
 ## 2.APP功能的展示
-![QQ图片20230503113019](https://user-images.githubusercontent.com/119687323/235827729-19cee528-f612-4f2b-9417-32406bed3d33.gif)![QQ图片20230503113030](https://user-images.githubusercontent.com/119687323/235827753-5429c93d-6572-4ceb-bc12-29fb5b2bf57d.gif)
+![QQ图片20230503113019](https://user-images.githubusercontent.com/119687323/235827997-bbc57421-4b78-4963-8f93-b93be8df971e.gif)
 
 ## 3.技术亮点
 
