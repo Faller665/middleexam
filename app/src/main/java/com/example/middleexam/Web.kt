@@ -19,6 +19,7 @@ class Web : BaseActivity() {
         transparentStatusBar(window)
         val temp:String?=intent.getStringExtra("url")
         val id:Int=intent.getIntExtra("id",0)
+//        webview的使用
         mybinding.web.loadUrl(temp as String)
         mybinding.web.setWebViewClient(object :WebViewClient(){
             override fun shouldOverrideUrlLoading(

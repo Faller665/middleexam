@@ -14,6 +14,7 @@ class MyApplication:Application() {
     }
     override fun onCreate() {
         super.onCreate()
+//        防止软件因bug崩溃
         mcontext =this
         Handler(Looper.myLooper()!!).post {
             while (true){

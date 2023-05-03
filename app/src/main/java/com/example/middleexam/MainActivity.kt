@@ -39,10 +39,12 @@ class MainActivity :BaseActivity() {
 
         myviewmodel.apply {
             getDataInMain1()
+//            Lifedata回调
             get_StoryLIfeData().observe(this@MainActivity) {
                 var temp1=it.plus(temp)
                 temp=it as  MutableList<Story>
                 mybinding.rv.apply {
+//                    完成点击事件接口的方法
                    val madapter = MainRvAdapter(temp1, this@MainActivity, true)
                     madapter.setOnclick(object :MainRvAdapter.ClickInterface{
                         override fun onTitleClick(view: View, position: Int) {
@@ -54,6 +56,7 @@ class MainActivity :BaseActivity() {
                     })
                     adapter=madapter
                     layoutManager = LinearLayoutManager(this@MainActivity)
+//                    上拉加载
                     addOnScrollListener(object :RecyclerView.OnScrollListener(){
                         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                             var lastPosition = -1
@@ -68,6 +71,7 @@ class MainActivity :BaseActivity() {
                         }})
             }
         }}
+//        下拉刷新
         mybinding.swipe.setOnRefreshListener {
             myviewmodel.getDataInMain1()
             if (mybinding.swipe.isRefreshing){
